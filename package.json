@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/odojs/odoql-exe",
   "dependencies": {
-    "extend": "^2.0.1",
     "odoql-utils": "^1.0.0"
   }
 }
