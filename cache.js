@@ -13,10 +13,13 @@ optimise = require('./optimise');
 
 parallelqueries = require('./parallelqueries');
 
-module.exports = function(exe, max) {
+module.exports = function(exe, options) {
   var _cached, _e, pq, res;
-  if (max == null) {
-    max = 5;
+  if (options == null) {
+    options = {};
+  }
+  if (options.maxparallelqueries == null) {
+    options.maxparallelqueries = 5;
   }
   _cached = {};
   _e = {
@@ -24,7 +27,7 @@ module.exports = function(exe, max) {
     result: [],
     error: []
   };
-  pq = parallelqueries(max, function(timings) {
+  pq = parallelqueries(options.maxparallelqueries, function(timings) {
     var e, i, len, ref, results1;
     ref = _e.ready;
     results1 = [];
@@ -35,6 +38,15 @@ module.exports = function(exe, max) {
     return results1;
   });
   res = function() {};
+  res.apply = function(queries) {
+    var _, key, results1;
+    results1 = [];
+    for (key in queries) {
+      _ = queries[key];
+      results1.push(_cached[key] = queries[key]);
+    }
+    return results1;
+  };
   res.run = function(queries) {
     var optimisedqueries;
     queries = diff(_cached, queries);
@@ -57,6 +69,7 @@ module.exports = function(exe, max) {
               update = {};
               for (k = 0, len2 = keys.length; k < len2; k++) {
                 key = keys[k];
+                console.log(key);
                 _cached[key] = queries[key];
                 update[key] = results[key];
               }

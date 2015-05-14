@@ -11,52 +11,49 @@ literal = function(exe, value) {
   };
 };
 
-module.exports = {
-  use: function(def) {
-    var i, len, providers, res;
-    providers = {
-      literal: literal
-    };
-    res = {
-      providers: providers,
-      clear: function() {
-        return providers = {
-          literal: literal
-        };
-      },
-      use: function(def) {
-        var _, d, fn, i, len, name, optype;
-        if (def instanceof Array) {
-          for (i = 0, len = def.length; i < len; i++) {
-            d = def[i];
-            res.use(def);
-          }
-          return res;
-        }
-        for (_ in def) {
-          optype = def[_];
-          for (name in optype) {
-            fn = optype[name];
-            providers[name] = fn;
-          }
+module.exports = function() {
+  var def, i, len, providers, res;
+  providers = {
+    literal: literal
+  };
+  res = {
+    providers: providers,
+    clear: function() {
+      return providers = {
+        literal: literal
+      };
+    },
+    use: function(def) {
+      var _, d, fn, i, len, name, optype;
+      if (def instanceof Array) {
+        for (i = 0, len = def.length; i < len; i++) {
+          d = def[i];
+          res.use(def);
         }
         return res;
-      },
-      build: function(q) {
-        if (!isquery(q)) {
-          return res.providers.literal(res, q);
-        }
-        if (res.providers[q.__q] == null) {
-          throw new Error(q.__q + " not found");
-        }
-        return res.providers[q.__q](res, q);
       }
-    };
-    res.use(def);
-    for (i = 0, len = ops.length; i < len; i++) {
-      def = ops[i];
-      res.use(def);
+      for (_ in def) {
+        optype = def[_];
+        for (name in optype) {
+          fn = optype[name];
+          providers[name] = fn;
+        }
+      }
+      return res;
+    },
+    build: function(q) {
+      if (!isquery(q)) {
+        return res.providers.literal(res, q);
+      }
+      if (res.providers[q.__q] == null) {
+        throw new Error(q.__q + " not found");
+      }
+      return res.providers[q.__q](res, q);
     }
-    return res;
+  };
+  for (i = 0, len = ops.length; i < len; i++) {
+    def = ops[i];
+    res.use(def);
   }
+  return res;
 };

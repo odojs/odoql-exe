@@ -7,16 +7,22 @@ diff = require './diff'
 optimise = require './optimise'
 parallelqueries = require './parallelqueries'
 
-module.exports = (exe, max = 5) ->
+module.exports = (exe, options) ->
+  options = {} if !options?
+  if !options.maxparallelqueries?
+    options.maxparallelqueries = 5
   _cached = {}
   _e =
     ready: []
     result: []
     error: []
-  pq = parallelqueries max, (timings) ->
+  pq = parallelqueries options.maxparallelqueries, (timings) ->
     e timings for e in _e.ready
   
   res = ->
+  res.apply = (queries) ->
+    for key, _ of queries
+      _cached[key] = queries[key]
   res.run = (queries) ->
     queries = diff _cached, queries
     optimisedqueries = optimise exe, queries
@@ -30,6 +36,7 @@ module.exports = (exe, max = 5) ->
               cb errors, (keys) ->
                 update = {}
                 for key in keys
+                  console.log key
                   _cached[key] = queries[key]
                   update[key] = results[key]
                 e update for e in _e.result
