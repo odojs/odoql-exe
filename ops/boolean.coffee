@@ -1,4 +1,4 @@
-helpers = require 'odoql-utils/helpers'
+helpers = require '../helpers'
 
 module.exports =
   binary:

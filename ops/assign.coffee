@@ -1,6 +1,6 @@
-extend = require 'odoql-utils/extend'
-async = require 'odoql-utils/async'
-visit = require 'odoql-utils/visit'
+extend = require 'extend'
+async = require 'odo-async'
+visit = require '../visit'
 
 module.exports =
   params:

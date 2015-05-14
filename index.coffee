@@ -1,4 +1,4 @@
-isquery = require 'odoql-utils/isquery'
+isquery = require './isquery'
 ops = require './ops'
 
 literal = (exe, value) -> (cb) -> cb null, value
