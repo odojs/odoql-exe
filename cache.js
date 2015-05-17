@@ -14,7 +14,15 @@ optimise = require('./optimise');
 parallelqueries = require('./parallelqueries');
 
 module.exports = function(exe, options) {
-  var _cached, _e, pq, res;
+  var _cached, _e, log, pq, res;
+  log = function() {};
+  if ((options != null ? options.hub : void 0) != null) {
+    log = function(message) {
+      return options.hub.emit('[odoql-exe] {message}', {
+        message: message
+      });
+    };
+  }
   if (options == null) {
     options = {};
   }
@@ -50,14 +58,25 @@ module.exports = function(exe, options) {
   res.run = function(queries) {
     var optimisedqueries;
     queries = diff(_cached, queries);
+    if (Object.keys(_cached).length > 0) {
+      log((Object.keys(_cached).join(', ')) + " in the cache");
+    }
+    if (Object.keys(queries).length > 0) {
+      log((Object.keys(queries).join(', ')) + " new or changed");
+    }
     optimisedqueries = optimise(exe, queries);
     return async.delay(function() {
       var fn, i, len, query;
       fn = function(query) {
         return pq.add(query.keys, function(cb) {
           return query.query(function(errors, results) {
-            var e, j, len1, ref;
+            var e, error, j, key, len1, ref;
             if (errors != null) {
+              log((Object.keys(errors).join(', ')) + " errored");
+              for (key in errors) {
+                error = errors[key];
+                log(key + ": " + error);
+              }
               ref = _e.error;
               for (j = 0, len1 = ref.length; j < len1; j++) {
                 e = ref[j];
@@ -65,11 +84,11 @@ module.exports = function(exe, options) {
               }
             }
             return cb(errors, function(keys) {
-              var k, key, l, len2, len3, ref1, results1, update;
+              var k, l, len2, len3, ref1, results1, update;
+              log((keys.join(', ')) + " complete, caching");
               update = {};
               for (k = 0, len2 = keys.length; k < len2; k++) {
                 key = keys[k];
-                console.log(key);
                 _cached[key] = queries[key];
                 update[key] = results[key];
               }
