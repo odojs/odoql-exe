@@ -3,7 +3,7 @@ ops = require './ops'
 
 literal = (exe, value) -> (cb) -> cb null, value
 
-module.exports = () ->
+module.exports = (options) ->
   providers = literal: literal
   res =
     providers: providers

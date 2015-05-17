@@ -11,7 +11,7 @@ literal = function(exe, value) {
   };
 };
 
-module.exports = function() {
+module.exports = function(options) {
   var def, i, len, providers, res;
   providers = {
     literal: literal
