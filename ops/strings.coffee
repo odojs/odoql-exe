@@ -1,4 +1,5 @@
 helpers = require '../helpers'
+template = require 'odo-template'
 
 module.exports =
   params:
@@ -7,6 +8,11 @@ module.exports =
         if typeof(source) isnt 'string'
           throw new Error 'Expecting string for findandreplace'
         source.replace new RegExp(params.find, params.flags), params.replace
+    template: (exe, params) ->
+      helpers.params exe, params, (params, source) ->
+        if typeof(source) isnt 'string'
+          throw new Error 'Expecting string for findandreplace'
+        template source, params
   unary:
     uppercase: (exe, params) ->
       helpers.unary exe, params, (source) ->
