@@ -25,7 +25,6 @@ module.exports =
                 # copy def
                 def = extend yes, {}, params.__p
                 visit def, fillrefs, (filled) ->
-                  return callback err if err?
                   getref = exe.build filled
                   getref (err, value) ->
                     return callback err if err?

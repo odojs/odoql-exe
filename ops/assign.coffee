@@ -19,13 +19,12 @@ module.exports =
             # copy def
             def = extend yes, {}, def
             visit def, fillrefs, (filled) ->
-              return callback err if err?
               getref = exe.build filled
               getref (err, value) ->
                 return callback err if err?
                 data[prop] = value
                 fincb()
-            
+
           tasks = []
           if source instanceof Array
             for d in source
@@ -34,6 +33,6 @@ module.exports =
           else
             for prop, def of params.__p
               tasks.push assi source, prop, def
-          
+
           async.series tasks, ->
             callback null, source

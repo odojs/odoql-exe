@@ -38,9 +38,6 @@ module.exports = {
               def = extend(true, {}, def);
               return visit(def, fillrefs, function(filled) {
                 var getref;
-                if (err != null) {
-                  return callback(err);
-                }
                 getref = exe.build(filled);
                 return getref(function(err, value) {
                   if (err != null) {
