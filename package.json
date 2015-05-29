@@ -1,6 +1,6 @@
 {
   "name": "odoql-exe",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Execution strategies for OdoQL",
   "main": "exe.js",
   "scripts": {
