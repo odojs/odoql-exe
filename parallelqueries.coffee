@@ -22,10 +22,12 @@ module.exports = (max, idle) ->
     entry.cancel = cancel
     next()
   next = ->
-    if idle? and _running.length is 0 and _queued.length is 0
-      idle _batch
-      _batch = {}
-      return
+    if idle?
+      runningCount = _running.filter((r) -> not r.isAsync).length
+      queuedCount = _queued.filter((r) -> not r.isAsync).length
+      if runningCount is 0 and queuedCount is 0
+        idle _batch
+        _batch = {}
     return if _queued.length is 0
     return if _running.length >= max
     start _queued.shift()
@@ -42,10 +44,11 @@ module.exports = (max, idle) ->
         return yes if entry.keys.length isnt 0
         entry.cancel()
         return no
-    add: (keys, task) ->
+    add: (isAsync, keys, task) ->
       entry =
         keys: keys
         task: task
+        isAsync: isAsync
       result.cancel keys
       _queued.push entry
     exec: -> next()

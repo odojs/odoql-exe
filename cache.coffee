@@ -37,7 +37,7 @@ module.exports = (exe, options) ->
     async.delay ->
       for query in optimisedqueries
         do (query) ->
-          pq.add query.keys, (cb) ->
+          callback = (cb) ->
             query.query (errors, results) ->
               if errors?
                 log "#{Object.keys(errors).join ', '} errored"
@@ -51,6 +51,7 @@ module.exports = (exe, options) ->
                   _cached[key] = queries[key]
                   update[key] = results[key]
                 e update for e in _e.result
+          pq.add query.isAsync, query.keys, callback
       pq.exec()
   res.on = (e, cb) ->
     _e[e] = [] if !_e[e]?

@@ -2,6 +2,8 @@ helpers = require '../helpers'
 
 module.exports =
   params:
+    options: (exe, params) ->
+      helpers.unary exe, params, (source) -> source
     pluck: (exe, params) ->
       helpers.params exe, params, (params, source) ->
         plu = (d) -> d[params]
@@ -50,8 +52,6 @@ module.exports =
         unless source instanceof Array
           throw new Error 'Not an array'
         source.length
-    nocache: (exe, params) ->
-      helpers.unary exe, params, (source) -> source
     one: (exe, params) ->
       helpers.unary exe, params, (source) ->
         unless source instanceof Array
