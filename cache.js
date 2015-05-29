@@ -56,7 +56,7 @@ module.exports = function(exe, options) {
     return results1;
   };
   res.run = function(queries) {
-    var optimisedqueries;
+    var fn, i, key, len, optimisedqueries, query;
     queries = diff(_cached, queries);
     if (Object.keys(_cached).length > 0) {
       log((Object.keys(_cached).join(', ')) + " in the cache");
@@ -64,64 +64,66 @@ module.exports = function(exe, options) {
     if (Object.keys(queries).length > 0) {
       log((Object.keys(queries).join(', ')) + " new or changed");
     }
+    for (key in queries) {
+      query = queries[key];
+      _cached[key] = query;
+    }
     optimisedqueries = optimise(exe, queries);
-    return async.delay(function() {
-      var fn, i, len, query;
-      fn = function(query) {
-        var callback, e, j, k, key, len1, len2, ref, ref1, update;
-        if (query.isAsync) {
-          update = {};
-          ref = query.keys;
-          for (j = 0, len1 = ref.length; j < len1; j++) {
-            key = ref[j];
-            update[key] = null;
-          }
-          ref1 = _e.result;
-          for (k = 0, len2 = ref1.length; k < len2; k++) {
-            e = ref1[k];
-            e(update);
-          }
+    fn = function(query) {
+      var callback, e, j, k, len1, len2, ref, ref1, update;
+      if (query.isAsync) {
+        update = {};
+        ref = query.keys;
+        for (j = 0, len1 = ref.length; j < len1; j++) {
+          key = ref[j];
+          update[key] = null;
         }
-        callback = function(cb) {
-          return query.query(function(errors, results) {
-            var error, l, len3, ref2;
-            if (errors != null) {
-              log((Object.keys(errors).join(', ')) + " errored");
-              for (key in errors) {
-                error = errors[key];
-                log(key + ": " + error);
-              }
-              ref2 = _e.error;
-              for (l = 0, len3 = ref2.length; l < len3; l++) {
-                e = ref2[l];
-                e(errors);
-              }
-            }
-            return cb(errors, function(keys) {
-              var len4, len5, m, n, ref3, results1;
-              log((keys.join(', ')) + " complete, caching");
-              update = {};
-              for (m = 0, len4 = keys.length; m < len4; m++) {
-                key = keys[m];
-                _cached[key] = queries[key];
-                update[key] = results[key];
-              }
-              ref3 = _e.result;
-              results1 = [];
-              for (n = 0, len5 = ref3.length; n < len5; n++) {
-                e = ref3[n];
-                results1.push(e(update));
-              }
-              return results1;
-            });
-          });
-        };
-        return pq.add(query.isAsync, query.keys, callback);
-      };
-      for (i = 0, len = optimisedqueries.length; i < len; i++) {
-        query = optimisedqueries[i];
-        fn(query);
+        ref1 = _e.result;
+        for (k = 0, len2 = ref1.length; k < len2; k++) {
+          e = ref1[k];
+          e(update);
+        }
       }
+      callback = function(cb) {
+        return query.query(function(errors, results) {
+          var error, l, len3, ref2;
+          if (errors != null) {
+            log((Object.keys(errors).join(', ')) + " errored");
+            for (key in errors) {
+              error = errors[key];
+              log(key + ": " + error);
+            }
+            ref2 = _e.error;
+            for (l = 0, len3 = ref2.length; l < len3; l++) {
+              e = ref2[l];
+              e(errors);
+            }
+          }
+          return cb(errors, function(keys) {
+            var len4, len5, m, n, ref3, results1;
+            log((keys.join(', ')) + " complete, caching");
+            update = {};
+            for (m = 0, len4 = keys.length; m < len4; m++) {
+              key = keys[m];
+              update[key] = results[key];
+            }
+            ref3 = _e.result;
+            results1 = [];
+            for (n = 0, len5 = ref3.length; n < len5; n++) {
+              e = ref3[n];
+              results1.push(e(update));
+            }
+            return results1;
+          });
+        });
+      };
+      return pq.add(query.isAsync, query.keys, callback);
+    };
+    for (i = 0, len = optimisedqueries.length; i < len; i++) {
+      query = optimisedqueries[i];
+      fn(query);
+    }
+    return async.delay(function() {
       return pq.exec();
     });
   };
