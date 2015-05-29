@@ -37,6 +37,12 @@ module.exports = (exe, options) ->
     async.delay ->
       for query in optimisedqueries
         do (query) ->
+          # null out async query results so components know they are executing
+          if query.isAsync
+            update = {}
+            for key in query.keys
+              update[key] = null
+            e update for e in _e.result
           callback = (cb) ->
             query.query (errors, results) ->
               if errors?

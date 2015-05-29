@@ -68,35 +68,48 @@ module.exports = function(exe, options) {
     return async.delay(function() {
       var fn, i, len, query;
       fn = function(query) {
-        var callback;
+        var callback, e, j, k, key, len1, len2, ref, ref1, update;
+        if (query.isAsync) {
+          update = {};
+          ref = query.keys;
+          for (j = 0, len1 = ref.length; j < len1; j++) {
+            key = ref[j];
+            update[key] = null;
+          }
+          ref1 = _e.result;
+          for (k = 0, len2 = ref1.length; k < len2; k++) {
+            e = ref1[k];
+            e(update);
+          }
+        }
         callback = function(cb) {
           return query.query(function(errors, results) {
-            var e, error, j, key, len1, ref;
+            var error, l, len3, ref2;
             if (errors != null) {
               log((Object.keys(errors).join(', ')) + " errored");
               for (key in errors) {
                 error = errors[key];
                 log(key + ": " + error);
               }
-              ref = _e.error;
-              for (j = 0, len1 = ref.length; j < len1; j++) {
-                e = ref[j];
+              ref2 = _e.error;
+              for (l = 0, len3 = ref2.length; l < len3; l++) {
+                e = ref2[l];
                 e(errors);
               }
             }
             return cb(errors, function(keys) {
-              var k, l, len2, len3, ref1, results1, update;
+              var len4, len5, m, n, ref3, results1;
               log((keys.join(', ')) + " complete, caching");
               update = {};
-              for (k = 0, len2 = keys.length; k < len2; k++) {
-                key = keys[k];
+              for (m = 0, len4 = keys.length; m < len4; m++) {
+                key = keys[m];
                 _cached[key] = queries[key];
                 update[key] = results[key];
               }
-              ref1 = _e.result;
+              ref3 = _e.result;
               results1 = [];
-              for (l = 0, len3 = ref1.length; l < len3; l++) {
-                e = ref1[l];
+              for (n = 0, len5 = ref3.length; n < len5; n++) {
+                e = ref3[n];
                 results1.push(e(update));
               }
               return results1;
