@@ -31,13 +31,9 @@ module.exports = (exe, queries) ->
             __s: queries.remote
 
   queries = asyncsplit exe, queries
-  console.log 'optimise1'
-  console.log queries
   queries =
     sync: split exe, queries.sync
     async: split exe, queries.async
-  console.log 'optimise2'
-  console.log queries
   build no, queries.sync
   build yes, queries.async
   result
