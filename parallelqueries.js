@@ -6,6 +6,7 @@ module.exports = function(max, idle) {
   _queued = [];
   start = function(entry) {
     var cancel;
+    _running.push(entry);
     entry.startedAt = new Date().getTime();
     cancel = entry.task(function(err, cb) {
       var fin, i, index, key, len, ref;

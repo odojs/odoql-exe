@@ -4,6 +4,7 @@ module.exports = (max, idle) ->
   _running = []
   _queued = []
   start = (entry) ->
+    _running.push entry
     entry.startedAt = new Date().getTime()
     cancel = entry.task (err, cb) ->
       index = _running.indexOf entry
