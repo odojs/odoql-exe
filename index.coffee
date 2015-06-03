@@ -1,7 +1,11 @@
 isquery = require './isquery'
 ops = require './ops'
 
-literal = (exe, value) -> (cb) -> cb null, value
+literal = (exe, value) ->
+  if isquery value
+    (cb) -> cb null, value.__s
+  else
+    (cb) -> cb null, value
 
 module.exports = (options) ->
   providers = literal: literal
