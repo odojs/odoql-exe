@@ -8,4 +8,5 @@ module.exports = [
   require './ops/strings'
   require './ops/assign'
   require './ops/types'
+  require './ops/json'
 ]
