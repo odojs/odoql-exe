@@ -18,6 +18,21 @@ res =
       helpers.binary exe, params, (left, right) ->
         left % right
   unary: {}
+  params:
+    interpolate_linear: (exe, params) ->
+      helpers.params exe, params, (params, source) ->
+        return null if Object.keys(params).length is 0
+        x1 = -Infinity
+        x2 = +Infinity
+        for input, output of params
+          input = +input
+          return output if input == source
+          x1 = input if input < source and input > x1
+          x2 = input if input > source and input < x2
+        return null if x1 is -Infinity or x2 is +Infinity
+        y1 = params[x1]
+        y2 = params[x2]
+        y1 + (y2 - y1) * ((source - x1) / (x2 - x1))
 
 binarymath = [
   'pow'
