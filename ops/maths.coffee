@@ -1,4 +1,5 @@
 helpers = require '../helpers'
+math = require 'odo-math'
 
 res =
   binary:
@@ -69,5 +70,17 @@ for op in uniarymath
     res.unary[op] = (exe, params) ->
       helpers.unary exe, params, (source) ->
         operation source
+
+paramsmath = [
+  'round10'
+  'floor10'
+  'ceil10'
+]
+for op in paramsmath
+  do (op) ->
+    operation = math[op]
+    res.params[op] = (exe, params) ->
+      helpers.params exe, params, (params, source) ->
+        operation source, params
 
 module.exports = res

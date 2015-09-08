@@ -5,7 +5,7 @@ visit = (node, nodecb, fincb) ->
   if typeof(node) isnt 'object'
     return fincb node
   nodecb node, (replacement) ->
-    if replacement?
+    if replacement isnt undefined
       return fincb replacement
     tasks = []
     for key, value of node
