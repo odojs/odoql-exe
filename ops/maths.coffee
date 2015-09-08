@@ -33,6 +33,9 @@ res =
         y1 = params[x1]
         y2 = params[x2]
         y1 + (y2 - y1) * ((source - x1) / (x2 - x1))
+    toFixed: (exe, params) ->
+      helpers.params exe, params, (params, source) ->
+        source.toFixed params
 
 binarymath = [
   'pow'

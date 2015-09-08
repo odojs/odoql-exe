@@ -4,7 +4,7 @@
   "description": "Execution strategies for OdoQL",
   "main": "exe.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/*.js --reporter spec"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,12 @@
   "homepage": "https://github.com/odojs/odoql-exe",
   "dependencies": {
     "extend": "^2.0.1",
-    "odo-async": "^1.0.0",
+    "odo-async": "1.0.1",
     "odo-template": "^1.0.0"
+  },
+  "devDependencies": {
+    "odoql": "7.*",
+    "chai": "3.2.0",
+    "mocha": "2.3.2"
   }
 }

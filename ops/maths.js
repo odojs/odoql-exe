@@ -61,6 +61,11 @@ res = {
         y2 = params[x2];
         return y1 + (y2 - y1) * ((source - x1) / (x2 - x1));
       });
+    },
+    toFixed: function(exe, params) {
+      return helpers.params(exe, params, function(params, source) {
+        return source.toFixed(params);
+      });
     }
   }
 };
