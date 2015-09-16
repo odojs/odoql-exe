@@ -16,7 +16,7 @@ module.exports = {
         return getsource(function(err, source) {
           var assi, d, def, i, len, prop, ref, ref1, tasks;
           if (err != null) {
-            return cb(err);
+            return callback(err);
           }
           assi = function(data, prop, def) {
             return function(fincb) {

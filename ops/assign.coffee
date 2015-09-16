@@ -8,7 +8,7 @@ module.exports =
       getsource = exe.build params.__s
       (callback) ->
         getsource (err, source) ->
-          return cb err if err?
+          return callback err if err?
           assi = (data, prop, def) -> (fincb) ->
             fillrefs = (node, cb) ->
               return cb() if !node.__q? or node.__q isnt 'ref'
