@@ -21,7 +21,7 @@
   "homepage": "https://github.com/odojs/odoql-exe",
   "dependencies": {
     "extend": "^2.0.1",
-    "odo-async": "1.0.1",
+    "odo-async": "1.0.2",
     "odo-template": "^1.0.0",
     "odo-math": "1.0.0"
   },
