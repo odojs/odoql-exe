@@ -56,7 +56,7 @@ module.exports = (exe, options) ->
               log "#{keys.join ', '} complete, caching"
               update = {}
               for key in keys
-                update[key] = results[key]
+                update[key] = results[key] ? null
               e update for e in _e.result
         pq.add query.isAsync, query.keys, callback
     async.delay -> pq.exec()

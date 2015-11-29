@@ -100,17 +100,17 @@ module.exports = function(exe, options) {
             }
           }
           return cb(errors, function(keys) {
-            var len4, len5, m, n, ref3, results1;
+            var len4, len5, m, n, ref3, ref4, results1;
             log((keys.join(', ')) + " complete, caching");
             update = {};
             for (m = 0, len4 = keys.length; m < len4; m++) {
               key = keys[m];
-              update[key] = results[key];
+              update[key] = (ref3 = results[key]) != null ? ref3 : null;
             }
-            ref3 = _e.result;
+            ref4 = _e.result;
             results1 = [];
-            for (n = 0, len5 = ref3.length; n < len5; n++) {
-              e = ref3[n];
+            for (n = 0, len5 = ref4.length; n < len5; n++) {
+              e = ref4[n];
               results1.push(e(update));
             }
             return results1;
